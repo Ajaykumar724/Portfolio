@@ -129,35 +129,35 @@ function Editor() {
   }, []);
 
   const renderPreview = () => {
-    switch (activeFile) {
-      case "Home.tsx":
-        return <Home />;
+    const map = {
+      "Home.tsx": Home,
+      "About.tsx": About,
+      "Experience.tsx": Experience,
+      "Projects.tsx": Projects,
+      "Skills.tsx": Skills,
+      "Achievements.tsx": Achievements,
+      "Contact.tsx": Contact,
+    };
 
-      case "About.tsx":
-        return <About />;
+    const Comp = map[activeFile] || Home;
+    return (
+      <>
+        <Comp />
 
-      case "Experience.tsx":
-        return <Experience />;
-
-      case "Projects.tsx":
-        return <Projects />;
-
-      case "Skills.tsx":
-        return <Skills />;
-
-      case "Achievements.tsx":
-        return <Achievements />;
-
-      case "Contact.tsx":
-        return <Contact />;
-
-      default:
-        return <Home />;
-    }
+        {/* debug overlay to help diagnose production render issues */}
+        <div style={{ position: 'fixed', right: 12, top: 72, zIndex: 60 }}>
+          <div className="text-xs text-gray-400 bg-black/60 p-2 rounded">
+            <div>activeFile: {String(activeFile)}</div>
+            <div>Comp type: {Comp ? typeof Comp : 'undefined'}</div>
+          </div>
+        </div>
+      </>
+    );
   };
 
   const basename = activeFile ? activeFile.split('.')[0] : '';
-  const code = rawFiles[basename] || codeSamples[activeFile] || `// ${activeFile} \n// source preview not available`;
+  const raw = rawFiles[basename] || codeSamples[activeFile] || `// ${activeFile} \n// source preview not available`;
+  const code = (typeof raw === 'string') ? raw : (raw && raw.default ? raw.default : JSON.stringify(raw, null, 2));
 
   function JSONView({ data }) {
     if (typeof data !== 'object' || data === null) return <pre>{String(data)}</pre>;
@@ -192,8 +192,8 @@ function Editor() {
 
       <div className="flex-1 flex overflow-hidden">
         <div style={{ width: codeWidth }} className="min-h-full overflow-auto bg-[#0f1115] p-4 font-mono text-sm text-gray-300">
-          <div className="bg-[#0b0c0e] rounded-lg p-4 shadow-inner min-h-full">
-            <pre className="whitespace-pre-wrap">{code}</pre>
+            <div className="bg-[#0b0c0e] rounded-lg p-4 shadow-inner min-h-full">
+            <pre className="whitespace-pre-wrap">{String(code)}</pre>
           </div>
         </div>
 

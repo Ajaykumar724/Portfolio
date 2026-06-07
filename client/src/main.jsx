@@ -7,11 +7,12 @@ import "./index.css";
 import {
   EditorProvider
 } from "./context/EditorContext";
+import ErrorBoundary from './components/ErrorBoundary';
 
-ReactDOM.createRoot(
-  document.getElementById("root")
-).render(
-  <EditorProvider>
-    <App />
-  </EditorProvider>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <ErrorBoundary>
+    <EditorProvider>
+      <App />
+    </EditorProvider>
+  </ErrorBoundary>
 );
